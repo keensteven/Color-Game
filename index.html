@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Color Game</title>
+
+  <!-- Bootstrap CDN -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <style type="text/css">
+     /*.color-image {
+      width: 260px;
+      height: 260px; 
+    }
+*/
+    #game {
+      margin: auto;
+      max-width: 1100px
+    }
+
+    img {
+      width: 25%;
+      height: 25%
+    }
+  </style>
+
+</head>
+
+<body>
+  <!-- BOOTSTRAP  
+
+1. [Watch the demo](https://youtu.be/yNI0l2FMeCk).
+
+2. The player will have to guess the answer, just like in Word Guess. This time, though, the player will guess with numbers instead of letters. 
+
+3. Here's how the app works:
+
+   * There will be four colors displayed as buttons on the page.
+
+   * The player will be shown a random number at the start of the game.
+
+   * When the player clicks on a color, it will add a specific amount of points to the player's total score. 
+
+     * Your game will hide this amount until the player clicks a color.
+     * When they do click one, update the player's score counter.
+
+   * The player wins if their total score matches the random number from the beginning of the game.
+
+   * The player loses if their score goes above the random number.
+
+   * The game restarts whenever the player wins or loses.
+
+     * When the game begins again, the player should see a new random number. Also, all the colors will have four new hidden values. Of course, the user's score (and score counter) will reset to zero.
+
+   * The app should show the number of games the player wins and loses. To that end, do not refresh the page as a means to restart the game.
+
+##### Option 1 Game design notes
+
+* The random number shown at the start of the game should be between 19 - 120.
+
+* Each color should have a random hidden value between 1 - 12. -->
+
+  <div class="jumbotron jumbotron-fluid">
+    <div class="container">
+      <h1 class="display-4">The Color Game</h1>
+      <p class="lead">You will be given a random number at the start of the game. There are four colors below. By
+        clicking on a color you will add a specific amount of points
+        to your total score.</p>
+      <p class="lead">You win the game by matching your total score to the random number, you lose the game if your
+        total score goes above the random number. The value of each color is hidden from you until you click on it. Each
+        time the game starts, the game will change the values of each color.</p>
+    </div>
+  </div>
+
+  <div class="container" id="game">
+
+    <!-- first row-->
+    <div class="row">
+
+      <div class="col-md-6 alert alert-secondary" role="alert">
+        <h4>Number to Guess: <span id="number-to-guess"></span></h4>
+      </div>
+
+      <div class="col-md-6 alert alert-secondary" role="alert">
+        Current Score: <span id="current-score"></span>
+      </div>
+
+    </div>
+
+    <!-- second row-->
+    <div class="row" id="colors">
+
+
+      <!-- ORIGINAL CODE FROM EXERCISE FILES IS A DIV
+          Note that this div is now empty. We will fill it dynamically 
+  <div id="colors">
+    </div>
+
+    -->
+
+      <!-- <div class="col-md-3 mb-3">
+        <img src="images/orange.jpg" alt="orange" class="img-thumbnail">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <img src="images/blue.jpg" alt="blue" class="img-thumbnail">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <img src="images/green.jpg" alt="green" class="img-thumbnail">
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <img src="images/red.jpg" alt="red" class="img-thumbnail">
+      </div> -->
+
+    </div>
+
+    <!-- thrid row -->
+
+    <div class="row">
+
+      <div class="col-md-6 alert alert-secondary mt-3" role="alert">Wins: <span id="wins-score"></span></div>
+
+      <div class="col-md-6 alert alert-secondary mt-3" role="alert">Losses: <span id="losses-score"></span></div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- JAVASCRIPT  -->
+  <!-- ========================================= -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script type="text/javascript">
+    
+    function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+
+}
+
+    
+    var targetNumber = getRndInteger(19,120);
+
+    $("#number-to-guess").text(targetNumber);
+
+    var counter = 0;
+
+    var colors = [
+      'images/orange.jpg',
+      'images/blue.jpg',
+      'images/green.jpg',
+      'images/red.jpg',
+    ]
+
+    var losses = 0;
+    var wins = 0;
+
+    // Creating multiple colors each with their own unique number value.
+    // We begin by expanding our array to include four options.
+    var numberOptions = [10, 5, 3, 7];
+
+    // Next we create a for loop to create colors for every numberOption.
+    for (var i = 0; i < 4; i++) {
+
+      // For each iteration, we will create an imageColor
+      var imageColor = $("<img>");
+
+      // First each color will be given the class ".color-image".
+      // This will allow the CSS to take effect.
+      imageColor.addClass("color-image");
+
+      // Each imageColor will be given a src link to the color image
+      imageColor.attr("src", colors[i]);
+
+      // Each imageColor will be given a data attribute called data-colorValue.
+      // This data attribute will be set equal to the array value.
+      imageColor.attr('random-value', Math.floor(Math.random() * 12) + 1)
+
+      // Lastly, each color image (with all it classes and attributes) will get added to the page.
+      $("#colors").append(imageColor);
+    }
+
+    // This time, our click event applies to every single color on the page. Not just one.
+    $(".color-image").on("click", function () {
+
+      // Determining the color's value requires us to extract the value from the data attribute.
+      // Using the $(this) keyword specifies that we should be extracting the color value of the clicked color.
+      // Using the .attr("data-colorvalue") allows us to grab the value out of the "data-colorvalue" attribute.
+      // Since attributes on HTML elements are strings, we must convert it to an integer before adding to the counter
+
+      var colorValue = ($(this).attr("random-value"));
+      colorValue = parseInt(colorValue);
+      // We then add the colorValue to the user's "counter" which is a global variable.
+      // Every click, from every color adds to the global counter.
+      counter += colorValue;
+
+      // All of the same game win-lose logic applies. So the rest remains unchanged.
+
+      if (counter === targetNumber) {
+        alert("You win!");
+        $("#wins-score").text(wins + 1);
+
+      } else if (counter >= targetNumber) {
+        alert("You lose!!");
+        $("#losses-score").text(losses + 1);
+      }
+
+      $("#current-score").text(counter);
+
+
+    });
+  </script>
+</body>
+
+</html>
