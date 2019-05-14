@@ -24,13 +24,10 @@
 
 <body>
   <!-- 
-   * The player wins if their total score matches the random number from the beginning of the game.
-   * The player loses if their score goes above the random number.
-   * The game restarts whenever the player wins or loses.
-   * When the game begins again, the player should see a new random number. Also, all the colors will have four new hidden values. Of course, the user's score (and score counter) will reset to zero.
-   * The app should show the number of games the player wins and loses. To that end, do not refresh the page as a means to restart the game.
-   * The random number shown at the start of the game should be between 19 - 120.
-   * Each color should have a random hidden value between 1 - 12. -->
+* When the game begins again, the player should see a new random number. Also, all the colors will have four new hidden values. Of course, the user's score (and score counter) will reset to zero.
+* The app should show the number of games the player wins and loses. To that end, do not refresh the page as a means to restart the game.
+* When the game begins again, the player should see a new random number. Also, all the crystals will have four new hidden values. Of course, the user's score (and score counter) will reset to zero.
+* Each color should have a random hidden value between 1 - 12. -->
 
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
@@ -62,14 +59,14 @@
 
     <!-- second row-->
 
-    <div class="row" id="colors">
+    <div class="row mb-3" id="colors">
     </div>
 
     <!-- thrid row -->
 
     <div class="row">
-      <div class="col-md-6 alert alert-secondary mt-3" role="alert">Wins: <span id="wins-score"></span></div>
-      <div class="col-md-6 alert alert-secondary mt-3" role="alert">Losses: <span id="losses-score"></span></div>
+      <div class="col-md-6 alert alert-secondary" role="alert">Wins: <span id="wins-score"></span></div>
+      <div class="col-md-6 alert alert-secondary" role="alert">Losses: <span id="losses-score"></span></div>
     </div>
 
   </div>
@@ -89,10 +86,10 @@
     var counter = 0;
 
     var colors = [
-      'images/orange.jpg',
-      'images/blue.jpg',
-      'images/green.jpg',
-      'images/red.jpg',
+      'images/blue.png',
+      'images/green.png',
+      'images/navy.png',
+      'images/maroon.png',
     ]
 
     var losses = 0;
@@ -100,6 +97,11 @@
 
     // Creating multiple colors each with their own unique number value.
     var numberOptions = getRndInteger(19, 120);
+
+
+   function displayCrystals(){
+
+    $("#colors").empty();
 
     // Next we create a for loop to create colors for every numberOption.
     for (var i = 0; i < 4; i++) {
@@ -122,8 +124,12 @@
       $("#colors").append(imageColor);
     }
 
+  }
+
+  displayCrystals()
+
     // This time, our click event applies to every single color on the page. Not just one.
-    $(".color-image").on("click", function () {
+    $(document).on("click", ".color-image", function () {
 
       // Determining the color's value requires us to extract the value from the data attribute.
       // Using the $(this) keyword specifies that we should be extracting the color value of the clicked color.
@@ -138,13 +144,14 @@
 
       if (counter === targetNumber) {
         alert("You win!");
-        $("#wins-score").text(wins++);
+        wins++;
+        $("#wins-score").text(wins);
         resetGame();
 
-      } else if (counter >= targetNumber) {
+      } else if (counter > targetNumber) {
         alert("You lose!!");
-        losses = losses++;
-        $("#losses-score").text(losses++);
+        losses++;
+        $("#losses-score").text(losses);
         resetGame();
       }
 
@@ -153,10 +160,10 @@
     });
 
     function resetGame() {
-      alert("Game is over, starting a new game")
-     
+      alert("Game is over, starting a new game...")
+      displayCrystals();
       // game is over, reset number to guess
-      var targetNumber = getRndInteger(19, 120);
+      targetNumber = getRndInteger(19, 120);
       $("#number-to-guess").text(targetNumber);
       counter = 0;
     }
